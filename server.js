@@ -6,7 +6,7 @@ const crypto = require('crypto'); // for generating SHA1 hash
 
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = "mongodb+srv://c22shen:QwMNqisu-vyACB8@cluster0.reitje2.mongodb.net/?retryWrites=true&w=majority";
+const uri = "mongodb+srv://c22shen:<password>@cluster0.reitje2.mongodb.net/?retryWrites=true&w=majority";
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
