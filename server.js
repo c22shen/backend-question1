@@ -1,5 +1,8 @@
 // const https = require('https');
 const axios = require('axios');
+// why axios?
+// https://medium.com/@jeffrey.allen.lewis/http-requests-compared-why-axios-is-better-than-node-fetch-more-secure-can-handle-errors-better-39fde869a4a6
+
 const fs = require('fs');
 const crypto = require('crypto');
 
@@ -19,14 +22,15 @@ axios.get('https://coderbyte.com/api/challenges/json/age-counting')
         for (let i = 0; i < arr.length; i += 2) {
             combinedArr.push({ key: arr[i].split('=')[1], age: arr[i + 1].split('=')[1] });
         }
-        console.log("combinedArr");
+        // console.log("combinedArr");
 
-        console.log(combinedArr);
+        // console.log(combinedArr);
 
         const age32list = combinedArr.filter(data => data.age = 32);
 
-        console.log('age32list');
-        console.log(age32list);
+        // console.log('age32list');
+        // console.log(age32list);
+
         // 3) Write file: output.txt 
         const outputStream = fs.createWriteStream('output.txt');
 
@@ -37,18 +41,18 @@ axios.get('https://coderbyte.com/api/challenges/json/age-counting')
         outputStream.write('\n');
 
         const inputFileData = fs.readFileSync('./output.txt');
-        console.log("inputFileData", inputFileData);
+        // console.log("inputFileData", inputFileData);
 
         // 4) Calculate the SHA1 hash
         // https://stackoverflow.com/questions/6984139/how-can-i-get-the-sha1-hash-of-a-string-in-node-js
         const sha1Hash = crypto.createHash('sha1').update(inputFileData).digest('hex');
 
-        console.log(sha1Hash)
+        // console.log(sha1Hash)
 
         // 5) reverse string - for loops works too 
         const reverseHash = sha1Hash.split('').reverse().join('');
 
-        console.log(reverseHash);
+        // console.log(reverseHash);
 
         // 6) append hash 
         const challengString = "dfh7bwrz5";
