@@ -1,69 +1,44 @@
-// const https = require('https');
-const axios = require('axios');
-// why axios?
-// https://medium.com/@jeffrey.allen.lewis/http-requests-compared-why-axios-is-better-than-node-fetch-more-secure-can-handle-errors-better-39fde869a4a6
+// Import required modules
+const axios = require('axios'); // for making HTTP requests
+const fs = require('fs'); // for working with the file system
+const crypto = require('crypto'); // for generating SHA1 hash
 
-const fs = require('fs');
-const crypto = require('crypto');
-
-// 1) Fetch GET https://coderbyte.com/api/challenges/json/age-counting
-// 1.5) use axios instead of http to  parse the response as JSON for easy processing
-
+// Make a GET request to the API endpoint using axios
 axios.get('https://coderbyte.com/api/challenges/json/age-counting')
     .then(response => {
+        // Store the API response data as JSON
         const jsonData = response.data;
-        // console.log(jsonData);
 
-        // 2) Count items age = 32 
-
+        // Parse the data and create an array of objects with keys and ages
         const combinedArr = [];
-        arr = jsonData.data.split(',');
-
-        for (let i = 0; i < arr.length; i += 2) {
-            combinedArr.push({ key: arr[i].split('=')[1], age: arr[i + 1].split('=')[1] });
+        arr = jsonData.data.split(','); // split the data string into an array
+        for (let i = 0; i < arr.length; i += 2) { // iterate over the array in steps of 2
+            combinedArr.push({ key: arr[i].split('=')[1], age: arr[i + 1].split('=')[1] }); // create an object with key and age properties and push it to the combinedArr
         }
-        // console.log("combinedArr");
 
-        // console.log(combinedArr);
+        // Filter the array to only include objects with age = 32
+        const age32list = combinedArr.filter(data => data.age === 32);
 
-        const age32list = combinedArr.filter(data => data.age = 32);
-
-        // console.log('age32list');
-        // console.log(age32list);
-
-        // 3) Write file: output.txt 
+        // Write the keys of the filtered objects to a file called "output.txt"
         const outputStream = fs.createWriteStream('output.txt');
-
         for (let i = 0; i < age32list.length; i++) {
-            outputStream.write(age32list[i].key + '\n');
+            outputStream.write(age32list[i].key + '\n'); // write the key to the output file followed by a newline character
         }
-        // the file should end with a newline character on its own line
-        outputStream.write('\n');
+        outputStream.write('\n'); // Write a newline character to the end of the file
 
+        // Read the contents of the output file
         const inputFileData = fs.readFileSync('./output.txt');
-        // console.log("inputFileData", inputFileData);
 
-        // 4) Calculate the SHA1 hash
-        // https://stackoverflow.com/questions/6984139/how-can-i-get-the-sha1-hash-of-a-string-in-node-js
+        // Calculate the SHA1 hash of the output file contents
         const sha1Hash = crypto.createHash('sha1').update(inputFileData).digest('hex');
 
-        // console.log(sha1Hash)
-
-        // 5) reverse string - for loops works too 
+        // Reverse the SHA1 hash string
         const reverseHash = sha1Hash.split('').reverse().join('');
 
-        // console.log(reverseHash);
-
-        // 6) append hash 
+        // Append the reversed hash to the string "dfh7bwrz5"
         const challengString = "dfh7bwrz5";
         console.log(reverseHash + ':' + challengString);
-
-        // fs.writeFileSync('./encryption.txt', sha1Hash);
-
     })
     .catch(error => {
-        console.error(error.message);
+        console.error(error.message); // print error message to the console if the API request fails
     });
-
-
-
