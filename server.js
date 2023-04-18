@@ -3,6 +3,59 @@ const axios = require('axios'); // for making HTTP requests
 const fs = require('fs'); // for working with the file system
 const crypto = require('crypto'); // for generating SHA1 hash
 
+
+
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const uri = "mongodb+srv://c22shen:<password>@cluster0.reitje2.mongodb.net/?retryWrites=true&w=majority";
+
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+const client = new MongoClient(uri, {
+    serverApi: {
+        version: ServerApiVersion.v1,
+        strict: true,
+        deprecationErrors: true,
+    }
+});
+
+
+// findAndModify operation on your collection and return the modified document. 
+// Find the document where the Age = 30 and then add a field called canRent and set its value to true
+const db = client.db('sample_airbnb');
+const collection = db.collection('listingsAndReviews');
+  const query = {name: "Charming Flat in Downtown Moda"};
+  const update = { $set: { canRent: 5 } };
+//   http://mongodb.github.io/node-mongodb-native/3.6/api/Collection.html#findOneAndUpdate
+// notice command is different for driver vs mongodb shell
+  const options = { returnDocument: 'after' };
+
+async function run() {
+    try {
+        // Connect the client to the server	(optional starting in v4.7)
+        await client.connect();
+        // Send a ping to confirm a successful connection
+        // await client.db("admin").command({ ping: 1 });
+        const result = await collection.findOneAndUpdate(query, update, options);
+        console.log("result.value;", result.value);
+        console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    } finally {
+        // Ensures that the client will close when you finish/error
+        await client.close();
+    }
+}
+run().catch(console.dir);
+
+// mongodb shell command
+
+// https://www.mongodb.com/docs/v4.4/reference/method/db.collection.findOneAndUpdate/
+
+// db.listingsAndReviews.findOneAndUpdate(
+//     {name: "Charming Flat in Downtown Moda"},
+//     { $set: { canRent: 8 } },
+//     {returnNewDocument : true}
+//  )
+
+
+
 // Make a GET request to the API endpoint using axios
 axios.get('https://coderbyte.com/api/challenges/json/age-counting')
     .then(response => {
